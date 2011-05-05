@@ -24,14 +24,16 @@
 #include "immsconf.h"
 #include "giosocket.h"
 
+//TODO: figure out correct scope working
+#include "immsd.h"
+
 using std::string;
 
-class SocketListenerBase
+class FileSocketListenerBase
 {
 public:
-    SocketListenerBase(const string &sockpath);
-    virtual ~SocketListenerBase();
-
+    FileSocketListenerBase(const string &sockpath);
+    virtual ~FileSocketListenerBase();
     static gboolean incoming_connection_helper(GIOChannel *source,
             GIOCondition condition, gpointer data);
 
@@ -40,12 +42,31 @@ protected:
     GIOChannel *listener;
 };
 
+// Use unix-domain file sockets for connections
 template <typename Connection>
-class SocketListener : public SocketListenerBase
+class FileSocketListener : public FileSocketListenerBase
 {
 public:
-    SocketListener(const string &sockpath) : SocketListenerBase(sockpath) {};
+    FileSocketListener(const string &sockpath) : 
+      FileSocketListenerBase(sockpath) {};
     virtual void incoming_connection(int fd) { new Connection(fd); }
+};
+
+// Use TCP sockets for connections
+class TCPSocketListener
+{
+public:
+    TCPSocketListener(int portno);  // technically an optional parameter
+    ~TCPSocketListener();
+
+    void incoming_connection(int sockfd);
+    static gboolean incoming_connection_helper(GIOChannel *source,
+            GIOCondition condition, gpointer data);
+
+    static const int default_port = 7778;
+
+protected:
+    GIOChannel *listener;
 };
 
 #endif

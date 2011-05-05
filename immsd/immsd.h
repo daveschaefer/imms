@@ -26,11 +26,28 @@
 
 using std::string;
 
-class SocketConnection : public GIOSocket
+enum SocketType {
+    FILESOCKET = 0,  // unix domain file sockets; the default
+    TCPSOCKET
+};
+
+class FileSocketConnection : public GIOSocket
 {
 public:
-    SocketConnection(int fd) : processor(0) { init(fd); }
-    ~SocketConnection() { delete processor; }
+    FileSocketConnection(int fd) : processor(0) { init(fd); }
+    ~FileSocketConnection() { delete processor; }
+    virtual void process_line(const string &line);
+    virtual void connection_lost() { delete this; }
+protected:
+    LineProcessor *processor;
+};
+
+// TODO: add security check to make sure the client IP doesn't shift around?
+class TCPSocketConnection : public GIOSocket
+{
+public:
+    TCPSocketConnection(int fd) : processor(0) { init(fd); }
+    ~TCPSocketConnection() { delete processor; }
     virtual void process_line(const string &line);
     virtual void connection_lost() { delete this; }
 protected:
@@ -40,19 +57,20 @@ protected:
 class RemoteProcessor : public LineProcessor
 {
 public:
-    RemoteProcessor(SocketConnection *connection);
+    RemoteProcessor(FileSocketConnection *connection);
     ~RemoteProcessor();
     void write_command(const string &command)
         { connection->write(command + "\n"); }
     void process_line(const string &line);
 protected:
-    SocketConnection *connection;
+    FileSocketConnection *connection;
 };
 
 class ImmsProcessor : public IMMSServer, public LineProcessor
 {
 public:
-    ImmsProcessor(SocketConnection *connection);
+    ImmsProcessor(FileSocketConnection *connection);
+    ImmsProcessor(TCPSocketConnection *tcpconnection);
     ~ImmsProcessor();
     void write_command(const string &command)
         { connection->write(command + "\n"); }
@@ -61,7 +79,8 @@ public:
 
     void playlist_updated();
 protected:
-    SocketConnection *connection;
+    FileSocketConnection *connection;
+    TCPSocketConnection *tcpconnection;
 };
 
 #endif

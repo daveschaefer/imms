@@ -41,6 +41,10 @@ using std::stringstream;
 
 const string AppName = IMMSD_APP;
 
+// set immsd defaults. we could also store these in an immsd class
+SocketType conntype = FILESOCKET;
+int portno = TCPSocketListener::default_port;
+
 static Imms *imms;
 static list<RemoteProcessor*> remotes;
 
@@ -51,7 +55,7 @@ gboolean do_events(void *unused)
     return TRUE;
 }
 
-void SocketConnection::process_line(const string &line)
+void FileSocketConnection::process_line(const string &line)
 {
     if (processor)
         return processor->process_line(line);
@@ -81,7 +85,41 @@ void SocketConnection::process_line(const string &line)
 
 };
 
-RemoteProcessor::RemoteProcessor(SocketConnection *connection)
+// TODO: bad to have duplicate code
+void TCPSocketConnection::process_line(const string &line)
+{
+    if (processor)
+        return processor->process_line(line);
+
+    stringstream sstr;
+    sstr << line;
+
+    string command;
+    sstr >> command;
+
+    if (command == "Version")
+    {
+        //write("Version " INTERFACE_VERSION "\n");
+        return;
+    }
+    if (command == "IMMS")
+    {
+        processor = new ImmsProcessor(this);
+        return;
+    }
+    /* todo: decide if we want this
+    if (command == "Remote")
+    {
+        processor = new RemoteProcessor(this);
+        return;
+    }
+    */
+    LOG(ERROR) << "Unknown command: " << command << endl;
+
+};
+
+
+RemoteProcessor::RemoteProcessor(FileSocketConnection *connection)
     : connection(connection)
 {
     remotes.push_back(this);
@@ -116,11 +154,31 @@ void RemoteProcessor::process_line(const string &line)
     LOG(ERROR) << "Unknown command: " << command << endl;
 }
 
-ImmsProcessor::ImmsProcessor(SocketConnection *connection)
+ImmsProcessor::ImmsProcessor(FileSocketConnection *connection)
     : connection(connection)
 {
     if (!imms)
+    {
         imms = new Imms(this);
+    }
+	else
+	{
+		LOG(INFO) << "warning: IMMSProcessor already exists." << endl;
+	}
+
+}
+
+ImmsProcessor::ImmsProcessor(TCPSocketConnection *tcpconnection)
+    : tcpconnection(tcpconnection)
+{
+    if (!imms)
+    {
+        imms = new Imms(this);
+    }
+	else
+	{
+		LOG(INFO) << "warning: IMMSProcessor already exists." << endl;
+	}
 }
 
 ImmsProcessor::~ImmsProcessor()
@@ -252,8 +310,73 @@ void quit(int signum)
     signal(signum, SIG_DFL);
 }
 
+bool parse_cmd_line_args(int argc, char **argv)
+{
+    Regexx rex;
+
+    // replace unsafe charaters
+    const string badchars("([^a-zA-Z0-9_-])");    
+    const string usage = "immsd [options]\n"
+          "-h, --help      display this message\n"
+          "--tcp [portno]  use TCP port instead of file port\n"
+          // TODO: print default TCP port
+          "-v, --version   display version\n";
+        
+
+    for (int i = 1; i < argc; i++)
+    {   
+        string arg(argv[i]);
+        arg = rex.replace(arg, badchars, "", Regexx::global);
+
+        if(arg == "--tcp")
+        {
+            conntype = TCPSOCKET;
+
+            // if there is another arg it could be the port number
+            if ((i+1) < argc)
+            {
+                string arg2(argv[i+1]);
+
+                arg2 = rex.replace(arg2, badchars, "", Regexx::global);
+                int nonnum = rex.exec(arg2, "[^0-9]", Regexx::global);
+                if (nonnum == 0)
+                {
+                    portno = atoi(arg2.c_str());
+                    i++;
+                }
+            }                
+        }
+        else if ((arg == "-h") || (arg == "--help")
+            || (arg == "-help"))  // in case they mistype
+        {
+            printf("usage: %s", usage.c_str());
+            exit(0);
+        }
+        else if ((arg == "-v") || (arg == "--version")
+            || (arg == "-version"))  // in case they mistype
+        {
+            printf("immsd %s", PACKAGE_VERSION);
+            exit(0);
+        }
+        else
+        {
+            printf("Unknown command '%s'\n", arg.c_str());
+        }
+    }
+
+    return true;
+}
+
+// immsd: accept and process IMMS commands from clients.
 int main(int argc, char **argv)
 {
+    // run setup tasks and create socket for listening to IMMS commands.    
+
+    if (argc > 1)
+    {
+        parse_cmd_line_args(argc, argv);
+    }
+
     int r = mkdir(get_imms_root().c_str(), 0700);
     if (r < 0 && errno != EEXIST)
     {
@@ -269,9 +392,20 @@ int main(int argc, char **argv)
         exit(1);
     }
 
-    // clean up after XMMS
+    // clean up after XMMS //TODO: do we still need this?
     for (int i = 3; i < 255; ++i)
         close(i);
+
+    // create a new GIOsocket event listener by calling the 
+    // appropriate constructor
+    if (conntype == TCPSOCKET)
+    {        
+        new TCPSocketListener(portno);
+    }
+    else if (conntype == FILESOCKET)
+    {
+        new FileSocketListener<FileSocketConnection>(get_imms_root("socket"));
+    }
 
     loop = g_main_loop_new(NULL, FALSE);
 
@@ -283,8 +417,6 @@ int main(int argc, char **argv)
     GSource* ts = g_timeout_source_new(500);
     g_source_attach(ts, NULL);
     g_source_set_callback(ts, (GSourceFunc)do_events, NULL, NULL);
-
-    SocketListener<SocketConnection> listener(get_imms_root("socket"));
 
     LOG(INFO) << "version " << PACKAGE_VERSION << " ready..." << endl;
 
