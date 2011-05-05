@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/244/trunk/imms/clients/xmms
+END
+rules.mk
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/244/trunk/imms/clients/xmms/rules.mk
+END
+interface.c
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/244/trunk/imms/clients/xmms/interface.c
+END
+plugin.cc
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/244/trunk/imms/clients/xmms/plugin.cc
+END
+plugin2.cc
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/244/trunk/imms/clients/xmms/plugin2.cc
+END
+cplugin.h
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/244/trunk/imms/clients/xmms/cplugin.h
+END

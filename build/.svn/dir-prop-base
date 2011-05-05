@@ -1,0 +1,16 @@
+K 10
+svn:ignore
+V 100
+.*.d
+lib*.so
+lib*.a
+immstool
+immsremote
+analyzer
+autotag
+classifier
+immsd
+train_model
+training_data
+
+END

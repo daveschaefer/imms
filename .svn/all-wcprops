@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 28
+/svn/!svn/ver/262/trunk/imms
+END
+rules.mk
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/244/trunk/imms/rules.mk
+END
+LICENSE
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/1/trunk/imms/LICENSE
+END
+configure.ac
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/257/trunk/imms/configure.ac
+END
+AUTHORS
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/!svn/ver/242/trunk/imms/AUTHORS
+END
+vars.mk.in
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/257/trunk/imms/vars.mk.in
+END
+INSTALL
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/!svn/ver/262/trunk/imms/INSTALL
+END
+autogen.sh
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/156/trunk/imms/autogen.sh
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/190/trunk/imms/README
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/244/trunk/imms/Makefile
+END
+install-sh
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/1/trunk/imms/install-sh
+END

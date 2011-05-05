@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/!svn/ver/257/trunk/imms/clients
+END
+clientstub.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/244/trunk/imms/clients/clientstub.h
+END
+clientstubbase.cc
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/244/trunk/imms/clients/clientstubbase.cc
+END
+clientstubbase.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/244/trunk/imms/clients/clientstubbase.h
+END

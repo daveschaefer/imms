@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/244/trunk/imms/immsd
+END
+immsd.h
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/244/trunk/imms/immsd/immsd.h
+END
+socketserver.cc
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/244/trunk/imms/immsd/socketserver.cc
+END
+socketserver.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/244/trunk/imms/immsd/socketserver.h
+END
+immsd.cc
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/244/trunk/imms/immsd/immsd.cc
+END

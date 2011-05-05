@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/251/trunk/imms/analyzer
+END
+fftprovider.h
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/251/trunk/imms/analyzer/fftprovider.h
+END
+melfilter.cc
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/244/trunk/imms/analyzer/melfilter.cc
+END
+hanning.h
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/251/trunk/imms/analyzer/hanning.h
+END
+mfcckeeper.cc
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/251/trunk/imms/analyzer/mfcckeeper.cc
+END
+analyzer.cc
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/251/trunk/imms/analyzer/analyzer.cc
+END
+melfilter.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/251/trunk/imms/analyzer/melfilter.h
+END
+soxprovider.h
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/244/trunk/imms/analyzer/soxprovider.h
+END
+mfcckeeper.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/251/trunk/imms/analyzer/mfcckeeper.h
+END
+beatkeeper.cc
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/251/trunk/imms/analyzer/beatkeeper.cc
+END
+analyzer.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/251/trunk/imms/analyzer/analyzer.h
+END
+beatkeeper.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/251/trunk/imms/analyzer/beatkeeper.h
+END
+fftprovider.cc
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/251/trunk/imms/analyzer/fftprovider.cc
+END

@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/svn/!svn/ver/244/trunk/imms/model
+END
+distance.h
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/244/trunk/imms/model/distance.h
+END
+model.cc
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/244/trunk/imms/model/model.cc
+END
+model.h
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/244/trunk/imms/model/model.h
+END
+emd.c
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/244/trunk/imms/model/emd.c
+END
+emd.h
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/244/trunk/imms/model/emd.h
+END
+distance.cc
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/244/trunk/imms/model/distance.cc
+END

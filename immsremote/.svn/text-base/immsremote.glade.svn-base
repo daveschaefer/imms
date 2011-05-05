@@ -1,0 +1,268 @@
+<?xml version="1.0" standalone="no"?> <!--*- mode: xml -*-->
+<!DOCTYPE glade-interface SYSTEM "http://glade.gnome.org/glade-2.0.dtd">
+
+<glade-interface>
+
+<widget class="GtkWindow" id="mainwindow">
+  <property name="visible">True</property>
+  <property name="title" translatable="yes">IMMS Remote</property>
+  <property name="type">GTK_WINDOW_TOPLEVEL</property>
+  <property name="window_position">GTK_WIN_POS_NONE</property>
+  <property name="modal">False</property>
+  <property name="default_width">640</property>
+  <property name="default_height">480</property>
+  <property name="resizable">True</property>
+  <property name="destroy_with_parent">False</property>
+  <property name="decorated">True</property>
+  <property name="skip_taskbar_hint">False</property>
+  <property name="skip_pager_hint">False</property>
+  <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
+  <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
+  <property name="focus_on_map">True</property>
+  <signal name="destroy" handler="on_window_destroy" last_modification_time="Mon, 20 Jun 2005 18:23:24 GMT"/>
+
+  <child>
+    <widget class="GtkVBox" id="vbox1">
+      <property name="visible">True</property>
+      <property name="homogeneous">False</property>
+      <property name="spacing">0</property>
+
+      <child>
+	<widget class="GtkScrolledWindow" id="scrolledwindow1">
+	  <property name="visible">True</property>
+	  <property name="can_focus">True</property>
+	  <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+	  <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+	  <property name="shadow_type">GTK_SHADOW_IN</property>
+	  <property name="window_placement">GTK_CORNER_TOP_LEFT</property>
+
+	  <child>
+	    <widget class="GtkTreeView" id="maintreeview">
+	      <property name="visible">True</property>
+	      <property name="can_focus">True</property>
+	      <property name="headers_visible">True</property>
+	      <property name="rules_hint">True</property>
+	      <property name="reorderable">False</property>
+	      <property name="enable_search">True</property>
+	      <property name="fixed_height_mode">False</property>
+	      <property name="hover_selection">False</property>
+	      <property name="hover_expand">False</property>
+	      <signal name="button_press_event" handler="on_maintreeview_button_press_event" last_modification_time="Wed, 22 Jun 2005 17:15:49 GMT"/>
+	    </widget>
+	  </child>
+	</widget>
+	<packing>
+	  <property name="padding">0</property>
+	  <property name="expand">True</property>
+	  <property name="fill">True</property>
+	</packing>
+      </child>
+
+      <child>
+	<widget class="GtkStatusbar" id="statusbar">
+	  <property name="visible">True</property>
+	  <property name="has_resize_grip">True</property>
+	</widget>
+	<packing>
+	  <property name="padding">0</property>
+	  <property name="expand">False</property>
+	  <property name="fill">False</property>
+	</packing>
+      </child>
+    </widget>
+  </child>
+</widget>
+
+<widget class="GtkMenu" id="contextmenu">
+
+  <child>
+    <widget class="GtkImageMenuItem" id="markitem">
+      <property name="visible">True</property>
+      <property name="label" translatable="yes">_Mark</property>
+      <property name="use_underline">True</property>
+      <signal name="activate" handler="on_markitem_activate" last_modification_time="Wed, 22 Jun 2005 16:58:19 GMT"/>
+      <accelerator key="m" modifiers="GDK_CONTROL_MASK" signal="activate"/>
+
+      <child internal-child="image">
+	<widget class="GtkImage" id="image72">
+	  <property name="visible">True</property>
+	  <property name="stock">gtk-add</property>
+	  <property name="icon_size">1</property>
+	  <property name="xalign">0.5</property>
+	  <property name="yalign">0.5</property>
+	  <property name="xpad">0</property>
+	  <property name="ypad">0</property>
+	</widget>
+      </child>
+    </widget>
+  </child>
+
+  <child>
+    <widget class="GtkImageMenuItem" id="unmarkitem">
+      <property name="visible">True</property>
+      <property name="label" translatable="yes">_Unmark</property>
+      <property name="use_underline">True</property>
+      <signal name="activate" handler="on_unmarkitem_activate" last_modification_time="Wed, 22 Jun 2005 16:59:19 GMT"/>
+      <accelerator key="u" modifiers="GDK_CONTROL_MASK" signal="activate"/>
+
+      <child internal-child="image">
+	<widget class="GtkImage" id="image73">
+	  <property name="visible">True</property>
+	  <property name="stock">gtk-remove</property>
+	  <property name="icon_size">1</property>
+	  <property name="xalign">0.5</property>
+	  <property name="yalign">0.5</property>
+	  <property name="xpad">0</property>
+	  <property name="ypad">0</property>
+	</widget>
+      </child>
+    </widget>
+  </child>
+
+  <child>
+    <widget class="GtkMenuItem" id="renameitem">
+      <property name="visible">True</property>
+      <property name="label" translatable="yes">Re_name</property>
+      <property name="use_underline">True</property>
+
+      <child>
+	<widget class="GtkMenu" id="renameitem_menu">
+
+	  <child>
+	    <widget class="GtkMenuItem" id="dummy1">
+	      <property name="visible">True</property>
+	      <property name="label" translatable="yes">dummy</property>
+	      <property name="use_underline">True</property>
+	    </widget>
+	  </child>
+	</widget>
+      </child>
+    </widget>
+  </child>
+
+  <child>
+    <widget class="GtkSeparatorMenuItem" id="separator2">
+      <property name="visible">True</property>
+    </widget>
+  </child>
+
+  <child>
+    <widget class="GtkImageMenuItem" id="refreshitem">
+      <property name="visible">True</property>
+      <property name="label" translatable="yes">_Refresh</property>
+      <property name="use_underline">True</property>
+      <signal name="activate" handler="on_refreshitem_activate" last_modification_time="Wed, 22 Jun 2005 18:01:02 GMT"/>
+      <accelerator key="r" modifiers="GDK_CONTROL_MASK" signal="activate"/>
+
+      <child internal-child="image">
+	<widget class="GtkImage" id="image74">
+	  <property name="visible">True</property>
+	  <property name="stock">gtk-refresh</property>
+	  <property name="icon_size">1</property>
+	  <property name="xalign">0.5</property>
+	  <property name="yalign">0.5</property>
+	  <property name="xpad">0</property>
+	  <property name="ypad">0</property>
+	</widget>
+      </child>
+    </widget>
+  </child>
+
+  <child>
+    <widget class="GtkMenuItem" id="selectparent">
+      <property name="visible">True</property>
+      <property name="label" translatable="yes">_Actions</property>
+      <property name="use_underline">True</property>
+
+      <child>
+	<widget class="GtkMenu" id="selectparent_menu">
+
+	  <child>
+	    <widget class="GtkMenuItem" id="allitem">
+	      <property name="visible">True</property>
+	      <property name="label" translatable="yes">Mark _All</property>
+	      <property name="use_underline">True</property>
+	      <signal name="activate" handler="on_allitem_activate" last_modification_time="Wed, 22 Jun 2005 17:57:56 GMT"/>
+	      <accelerator key="a" modifiers="GDK_CONTROL_MASK" signal="activate"/>
+	    </widget>
+	  </child>
+
+	  <child>
+	    <widget class="GtkMenuItem" id="cropitem">
+	      <property name="visible">True</property>
+	      <property name="label" translatable="yes">_Crop</property>
+	      <property name="use_underline">True</property>
+	      <signal name="activate" handler="on_cropitem_activate" last_modification_time="Thu, 23 Jun 2005 00:39:51 GMT"/>
+	    </widget>
+	  </child>
+	</widget>
+      </child>
+    </widget>
+  </child>
+
+  <child>
+    <widget class="GtkImageMenuItem" id="folditem">
+      <property name="visible">True</property>
+      <property name="label" translatable="yes">_Fold</property>
+      <property name="use_underline">True</property>
+
+      <child internal-child="image">
+	<widget class="GtkImage" id="image75">
+	  <property name="visible">True</property>
+	  <property name="stock">gtk-zoom-out</property>
+	  <property name="icon_size">1</property>
+	  <property name="xalign">0.5</property>
+	  <property name="yalign">0.5</property>
+	  <property name="xpad">0</property>
+	  <property name="ypad">0</property>
+	</widget>
+      </child>
+
+      <child>
+	<widget class="GtkMenu" id="folditem_menu">
+
+	  <child>
+	    <widget class="GtkRadioMenuItem" id="1fold">
+	      <property name="visible">True</property>
+	      <property name="label" translatable="yes">_1</property>
+	      <property name="use_underline">True</property>
+	      <property name="active">False</property>
+	    </widget>
+	  </child>
+
+	  <child>
+	    <widget class="GtkRadioMenuItem" id="5fold">
+	      <property name="visible">True</property>
+	      <property name="label" translatable="yes">_5</property>
+	      <property name="use_underline">True</property>
+	      <property name="active">False</property>
+	      <property name="group">1fold</property>
+	    </widget>
+	  </child>
+
+	  <child>
+	    <widget class="GtkRadioMenuItem" id="10fold">
+	      <property name="visible">True</property>
+	      <property name="label" translatable="yes">1_0</property>
+	      <property name="use_underline">True</property>
+	      <property name="active">True</property>
+	      <property name="group">1fold</property>
+	    </widget>
+	  </child>
+
+	  <child>
+	    <widget class="GtkRadioMenuItem" id="25fold">
+	      <property name="visible">True</property>
+	      <property name="label" translatable="yes">_25</property>
+	      <property name="use_underline">True</property>
+	      <property name="active">False</property>
+	      <property name="group">1fold</property>
+	    </widget>
+	  </child>
+	</widget>
+      </child>
+    </widget>
+  </child>
+</widget>
+
+</glade-interface>

@@ -1,0 +1,251 @@
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/258/trunk/imms/immscore
+END
+flags.h
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/244/trunk/imms/immscore/flags.h
+END
+playlist.cc
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/244/trunk/imms/immscore/playlist.cc
+END
+playlist.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/244/trunk/imms/immscore/playlist.h
+END
+immsutil.cc
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/244/trunk/imms/immscore/immsutil.cc
+END
+serverstub.cc
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/244/trunk/imms/immscore/serverstub.cc
+END
+regexx.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/116/trunk/imms/immscore/regexx.h
+END
+immsutil.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/244/trunk/imms/immscore/immsutil.h
+END
+imms.cc
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/252/trunk/imms/immscore/imms.cc
+END
+xidle.cc
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/244/trunk/imms/immscore/xidle.cc
+END
+song.cc
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/252/trunk/imms/immscore/song.cc
+END
+imms.h
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/244/trunk/imms/immscore/imms.h
+END
+xidle.h
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/244/trunk/imms/immscore/xidle.h
+END
+immsdb.cc
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/244/trunk/imms/immscore/immsdb.cc
+END
+immsdb.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/244/trunk/imms/immscore/immsdb.h
+END
+picker.cc
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/252/trunk/imms/immscore/picker.cc
+END
+picker.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/252/trunk/imms/immscore/picker.h
+END
+correlate.cc
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/244/trunk/imms/immscore/correlate.cc
+END
+md5.c
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/116/trunk/imms/immscore/md5.c
+END
+fetcher.h
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/252/trunk/imms/immscore/fetcher.h
+END
+songinfo.cc
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/244/trunk/imms/immscore/songinfo.cc
+END
+appname.h
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/244/trunk/imms/immscore/appname.h
+END
+md5.h
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/116/trunk/imms/immscore/md5.h
+END
+md5digest.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/244/trunk/imms/immscore/md5digest.h
+END
+basicdb.cc
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/244/trunk/imms/immscore/basicdb.cc
+END
+giosocket.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/244/trunk/imms/immscore/giosocket.h
+END
+basicdb.h
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/244/trunk/imms/immscore/basicdb.h
+END
+strmanip.cc
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/244/trunk/imms/immscore/strmanip.cc
+END
+ltqnorm.h
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/246/trunk/imms/immscore/ltqnorm.h
+END
+strmanip.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/244/trunk/imms/immscore/strmanip.h
+END
+regexx.cc
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/116/trunk/imms/immscore/regexx.cc
+END
+serverstub.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/244/trunk/imms/immscore/serverstub.h
+END
+song.h
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/246/trunk/imms/immscore/song.h
+END
+fetcher.cc
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/258/trunk/imms/immscore/fetcher.cc
+END
+levenshtein.c
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/116/trunk/imms/immscore/levenshtein.c
+END
+correlate.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/244/trunk/imms/immscore/correlate.h
+END
+songinfo.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/244/trunk/imms/immscore/songinfo.h
+END
+levenshtein.h
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/244/trunk/imms/immscore/levenshtein.h
+END
+sqldb2.cc
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/244/trunk/imms/immscore/sqldb2.cc
+END
+sqlite++.cc
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/244/trunk/imms/immscore/sqlite++.cc
+END
+sqldb2.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/244/trunk/imms/immscore/sqldb2.h
+END
+sqlite++.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/244/trunk/imms/immscore/sqlite++.h
+END
