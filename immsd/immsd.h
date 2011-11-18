@@ -27,8 +27,8 @@
 using std::string;
 
 enum SocketType {
-    FILESOCKET = 0,  // unix domain file sockets; the default
-    TCPSOCKET
+    UNIX_SOCKET = 0,  // unix domain file sockets; the default
+    TCP_SOCKET
 };
 
 class FileSocketConnection : public GIOSocket

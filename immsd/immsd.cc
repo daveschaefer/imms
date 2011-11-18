@@ -21,6 +21,7 @@
 #include <signal.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <getopt.h>
 
 #include <iostream>
 #include <sstream>
@@ -42,7 +43,7 @@ using std::stringstream;
 const string AppName = IMMSD_APP;
 
 // set immsd defaults. we could also store these in an immsd class
-SocketType conntype = FILESOCKET;
+SocketType conntype = UNIX_SOCKET;
 int portno = TCPSocketListener::default_port;
 
 static Imms *imms;
@@ -161,10 +162,10 @@ ImmsProcessor::ImmsProcessor(FileSocketConnection *connection)
     {
         imms = new Imms(this);
     }
-	else
-	{
-		LOG(INFO) << "warning: IMMSProcessor already exists." << endl;
-	}
+    else
+    {
+        LOG(INFO) << "warning: IMMSProcessor already exists." << endl;
+    }
 
 }
 
@@ -175,10 +176,10 @@ ImmsProcessor::ImmsProcessor(TCPSocketConnection *tcpconnection)
     {
         imms = new Imms(this);
     }
-	else
-	{
-		LOG(INFO) << "warning: IMMSProcessor already exists." << endl;
-	}
+    else
+    {
+        LOG(INFO) << "warning: IMMSProcessor already exists." << endl;
+    }
 }
 
 ImmsProcessor::~ImmsProcessor()
@@ -312,56 +313,78 @@ void quit(int signum)
 
 bool parse_cmd_line_args(int argc, char **argv)
 {
-    Regexx rex;
-
-    // replace unsafe charaters
-    const string badchars("([^a-zA-Z0-9_-])");    
     const string usage = "immsd [options]\n"
           "-h, --help      display this message\n"
-          "--tcp [portno]  use TCP port instead of file port\n"
-          // TODO: print default TCP port
+          "--tcp[=portno]  use TCP port instead of file port.\n"
           "-v, --version   display version\n";
-        
 
-    for (int i = 1; i < argc; i++)
-    {   
-        string arg(argv[i]);
-        arg = rex.replace(arg, badchars, "", Regexx::global);
+    static struct option long_options[] =
+    {
+        {"help",    no_argument,        NULL, 'h'},
+        {"tcp",     optional_argument,  NULL, 't'},
+        {"version", no_argument,        NULL, 'v'},
+        {0, 0, 0, 0}
+    };
 
-        if(arg == "--tcp")
+    int ch;
+    extern char *optarg;
+
+
+    while ((ch = getopt_long(argc, argv, "hv", long_options, NULL)) != -1)
+    {
+        switch (ch)
         {
-            conntype = TCPSOCKET;
+            case 'h':
+                printf("usage: %s", usage.c_str());
+                exit(0);
+                break;
 
-            // if there is another arg it could be the port number
-            if ((i+1) < argc)
-            {
-                string arg2(argv[i+1]);
+            case 't':
+                conntype = TCP_SOCKET;
 
-                arg2 = rex.replace(arg2, badchars, "", Regexx::global);
-                int nonnum = rex.exec(arg2, "[^0-9]", Regexx::global);
-                if (nonnum == 0)
+                // If there is another arg it is the port number
+                if (optarg != NULL)
                 {
-                    portno = atoi(arg2.c_str());
-                    i++;
+                    Regexx rex;
+                    string tcpport(optarg);
+
+                    int nonnum = rex.exec(tcpport, "[^0-9]", Regexx::global);
+                    if (nonnum == 0)
+                    {
+                        portno = atoi(tcpport.c_str());
+                    }
+                    else
+                    {
+                        printf("Bad port number '%s'. Please use a number.\n"
+                            "Using default port %d instead.\n",
+                            optarg, TCPSocketListener::default_port);
+                    }
                 }
-            }                
+                break;
+
+            case 'v':
+                printf("immsd %s", PACKAGE_VERSION);
+                exit(0);
+                break;
+
+            case '?':
+                //getopt already prints an error message
+                exit(0);
+                break;
         }
-        else if ((arg == "-h") || (arg == "--help")
-            || (arg == "-help"))  // in case they mistype
+    }
+
+    //if there are emaining options, the user meant to do something different
+    //exit rather than continuing with unwanted actions
+    if (optind < argc)
+    {
+        while (optind < argc)
         {
-            printf("usage: %s", usage.c_str());
-            exit(0);
+            printf ("Unknown argument: '%s'; ignoring \n", argv[optind++]);
         }
-        else if ((arg == "-v") || (arg == "--version")
-            || (arg == "-version"))  // in case they mistype
-        {
-            printf("immsd %s", PACKAGE_VERSION);
-            exit(0);
-        }
-        else
-        {
-            printf("Unknown command '%s'\n", arg.c_str());
-        }
+
+        printf("usage: %s", usage.c_str());
+        exit(0);
     }
 
     return true;
@@ -398,11 +421,11 @@ int main(int argc, char **argv)
 
     // create a new GIOsocket event listener by calling the 
     // appropriate constructor
-    if (conntype == TCPSOCKET)
+    if (conntype == TCP_SOCKET)
     {        
         new TCPSocketListener(portno);
     }
-    else if (conntype == FILESOCKET)
+    else if (conntype == UNIX_SOCKET)
     {
         new FileSocketListener<FileSocketConnection>(get_imms_root("socket"));
     }
