@@ -23,50 +23,40 @@
 
 #include "immsconf.h"
 #include "giosocket.h"
-
-//TODO: figure out correct scope working
-#include "immsd.h"
+#include "socketdefines.h"
 
 using std::string;
 
-class FileSocketListenerBase
+class SocketListenerBase
 {
 public:
-    FileSocketListenerBase(const string &sockpath);
-    virtual ~FileSocketListenerBase();
+    SocketListenerBase(const string &sockpath);           // unix file sockets
+    SocketListenerBase(int tcpportno = default_tcp_port); // tcp sockets`
+    virtual ~SocketListenerBase();
     static gboolean incoming_connection_helper(GIOChannel *source,
             GIOCondition condition, gpointer data);
 
     virtual void incoming_connection(int fd) = 0;
+
+    static const int default_tcp_port = 7778;
+
 protected:
     GIOChannel *listener;
+
+private:
+    void Listen(int fd);
+    static SocketType sockettype;
 };
 
-// Use unix-domain file sockets for connections
 template <typename Connection>
-class FileSocketListener : public FileSocketListenerBase
+class SocketListener : public SocketListenerBase
 {
 public:
-    FileSocketListener(const string &sockpath) : 
-      FileSocketListenerBase(sockpath) {};
+    SocketListener(const string &sockpath) :
+      SocketListenerBase(sockpath) {};
+    SocketListener(int portno) :
+      SocketListenerBase(portno) {};
     virtual void incoming_connection(int fd) { new Connection(fd); }
-};
-
-// Use TCP sockets for connections
-class TCPSocketListener
-{
-public:
-    TCPSocketListener(int portno);  // technically an optional parameter
-    ~TCPSocketListener();
-
-    void incoming_connection(int sockfd);
-    static gboolean incoming_connection_helper(GIOChannel *source,
-            GIOCondition condition, gpointer data);
-
-    static const int default_port = 7778;
-
-protected:
-    GIOChannel *listener;
 };
 
 #endif

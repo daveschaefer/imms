@@ -22,20 +22,16 @@
 #include <string>
 
 #include "imms.h"
+#include "socketdefines.h"
 #include "socketserver.h"
 
 using std::string;
 
-enum SocketType {
-    UNIX_SOCKET = 0,  // unix domain file sockets; the default
-    TCP_SOCKET
-};
-
-class FileSocketConnection : public GIOSocket
+class SocketConnection : public GIOSocket
 {
 public:
-    FileSocketConnection(int fd) : processor(0) { init(fd); }
-    ~FileSocketConnection() { delete processor; }
+    SocketConnection(int fd) : processor(0) { init(fd); }
+    ~SocketConnection() { delete processor; }
     virtual void process_line(const string &line);
     virtual void connection_lost() { delete this; }
 protected:
@@ -43,34 +39,23 @@ protected:
 };
 
 // TODO: add security check to make sure the client IP doesn't shift around?
-class TCPSocketConnection : public GIOSocket
-{
-public:
-    TCPSocketConnection(int fd) : processor(0) { init(fd); }
-    ~TCPSocketConnection() { delete processor; }
-    virtual void process_line(const string &line);
-    virtual void connection_lost() { delete this; }
-protected:
-    LineProcessor *processor;
-};
 
 class RemoteProcessor : public LineProcessor
 {
 public:
-    RemoteProcessor(FileSocketConnection *connection);
+    RemoteProcessor(SocketConnection *connection);
     ~RemoteProcessor();
     void write_command(const string &command)
         { connection->write(command + "\n"); }
     void process_line(const string &line);
 protected:
-    FileSocketConnection *connection;
+    SocketConnection *connection;
 };
 
 class ImmsProcessor : public IMMSServer, public LineProcessor
 {
 public:
-    ImmsProcessor(FileSocketConnection *connection);
-    ImmsProcessor(TCPSocketConnection *tcpconnection);
+    ImmsProcessor(SocketConnection *connection);
     ~ImmsProcessor();
     void write_command(const string &command)
         { connection->write(command + "\n"); }
@@ -79,8 +64,7 @@ public:
 
     void playlist_updated();
 protected:
-    FileSocketConnection *connection;
-    TCPSocketConnection *tcpconnection;
+    SocketConnection *connection;
 };
 
 #endif

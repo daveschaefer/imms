@@ -31,8 +31,16 @@
 using std::endl;
 using std::cerr;
 
-FileSocketListenerBase::FileSocketListenerBase(const string &sockpath)
+// initialize here since we're not allowed to do so in the header
+SocketType SocketListenerBase::sockettype = UNIX_SOCKET;
+
+SocketListenerBase::SocketListenerBase(const string &sockpath)
 {
+    // set up fd as file socket
+    struct sockaddr_un sock_addr;
+
+    sockettype = UNIX_SOCKET;
+
     int fd = socket(PF_UNIX, SOCK_STREAM, 0);
     if (fd < 0)
     {
@@ -40,92 +48,68 @@ FileSocketListenerBase::FileSocketListenerBase(const string &sockpath)
         exit(3);
     }
 
-    struct sockaddr_un sun;
-    sun.sun_family = AF_UNIX;
-    strncpy(sun.sun_path, sockpath.c_str(), sizeof(sun.sun_path));
+    sock_addr.sun_family = AF_UNIX;
+    strncpy(sock_addr.sun_path, sockpath.c_str(), sizeof(sock_addr.sun_path));
     unlink(sockpath.c_str());
-    if (bind(fd, (sockaddr*)&sun, sizeof(sun)))
+
+    if (bind(fd, (struct sockaddr*) &sock_addr, sizeof(sock_addr)) != 0)
     {
-        cerr << "Could not bind file socket: " << strerror(errno) << endl;
+        cerr << "Could not bind socket: " << strerror(errno) << endl;
         exit(4);
     }
 
-    if (listen(fd, 5))
-    {
-        cerr << "Could not listen on file socket: " << strerror(errno) << endl;
-        exit(5);
-    }
+    Listen(fd);
 
     listener = g_io_channel_unix_new(fd);
     g_io_add_watch(listener, (GIOCondition)(G_IO_IN | G_IO_PRI),
             incoming_connection_helper, this);
 }
 
-FileSocketListenerBase::~FileSocketListenerBase()
+SocketListenerBase::SocketListenerBase(int portno)
 {
-    if (listener)
-    {
-        g_io_channel_close(listener);
-        g_io_channel_unref(listener);
-        listener = 0;
-    }
-}
+    // set up fd as TCP socket
+    struct sockaddr_in sock_addr;
 
-gboolean FileSocketListenerBase::incoming_connection_helper(
-        GIOChannel *source, GIOCondition condition, gpointer data)
-{
-    FileSocketListenerBase *ss = (FileSocketListenerBase*)data;
+    sockettype = TCP_SOCKET;
 
-    struct sockaddr_un sun;
-    memset(&sun, 0, sizeof(sun));
-    socklen_t size = 0;
-    int fd = accept(g_io_channel_unix_get_fd(ss->listener),
-            (sockaddr*)&sun, &size);
-
-#ifdef DEBUG
-    cerr << "Incoming file connection!" << endl;
-#endif
-
-    if (fd != -1)
-        ss->incoming_connection(fd);
-    return true;
-}
-
-// begin listening on a TCP port
-TCPSocketListener::TCPSocketListener
-    (int portno = TCPSocketListener::default_port)
-{
-    int sockfd;     
-    struct sockaddr_in serv_addr;    
-
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd < 0)
+    int fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (fd < 0)
     {
         cerr << "Could not create a TCP socket: " << strerror(errno) << endl;
+        exit(3);
     }
 
-    bzero((char *) &serv_addr, sizeof(serv_addr));
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_addr.s_addr = INADDR_ANY;
-    serv_addr.sin_port = htons(portno);
-    if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
+    bzero((char *) &sock_addr, sizeof(sock_addr));
+    sock_addr.sin_family = AF_INET;
+    sock_addr.sin_addr.s_addr = INADDR_ANY;
+    sock_addr.sin_port = htons(portno);
+
+    if (bind(fd, (struct sockaddr*) &sock_addr, sizeof(sock_addr)) != 0)
     {
-        cerr << "Could not bind TCP socket: " << strerror(errno) << endl;
+        cerr << "Could not bind socket: " << strerror(errno) << endl;
+        exit(4);
     }
 
-    if(listen(sockfd,5))
-    {
-        cerr << "Could not listen on TCP socket: " << strerror(errno) << endl;
-    }
+    Listen(fd);
 
-    listener = g_io_channel_unix_new(sockfd);
-    g_io_add_watch(listener, (GIOCondition)(G_IO_IN | G_IO_PRI),
-        incoming_connection_helper, this);
+    //gsocket = gnet_tcp_socket_server_new_with_port(portno);
+    //listener = gnet_tcp_socket_get_io_channel(gsocket);
+    //TODO: add watch or listen async
 
     std::cout << "listening on TCP port " << portno << std::endl;
 }
 
-TCPSocketListener::~TCPSocketListener()
+void SocketListenerBase::Listen(int fd)
+{
+    if (listen(fd, 5))
+    {
+        cerr << "Could not listen on socket: " <<
+            strerror(errno) << endl;
+        exit(5);
+    }
+}
+
+SocketListenerBase::~SocketListenerBase()
 {
     if (listener)
     {
@@ -133,38 +117,42 @@ TCPSocketListener::~TCPSocketListener()
         g_io_channel_unref(listener);
         listener = 0;
     }
-
 }
 
-// if we receive a message on the TCP port, accept and create a connection
-gboolean TCPSocketListener::incoming_connection_helper(
+// if we receive a message on the port, accept and create a connection
+gboolean SocketListenerBase::incoming_connection_helper(
         GIOChannel *source, GIOCondition condition, gpointer data)
 {
-    TCPSocketListener *ss = (TCPSocketListener*)data;
+    SocketListenerBase *ss = (SocketListenerBase*)data;
 
-    int sockfd;
-    socklen_t clilen;
-    struct sockaddr_in cli_addr;    
+    int fd;
 
-    clilen = sizeof(cli_addr);
-    sockfd = accept(g_io_channel_unix_get_fd(ss->listener),
-             (struct sockaddr *) &cli_addr, 
-             &clilen);
-
-    if (sockfd < 0)
+    if (sockettype == UNIX_SOCKET)
     {
-        cerr << "Error on accept TCP socket: " << strerror(errno) << endl;
+        socklen_t size = 0;
+        struct sockaddr_un sock_addr;
+
+        memset(&sock_addr, 0, sizeof(sock_addr));
+        fd = accept(g_io_channel_unix_get_fd(ss->listener),
+                (struct sockaddr*)&sock_addr, &size);
+
+    #ifdef DEBUG
+        cerr << "Incoming file connection!" << endl;
+    #endif
+    }
+    else if (sockettype == TCP_SOCKET)
+    {
+        //fd = gnet_tcp_socket_get_port(gsocket);
     }
     else
     {
-        ss->incoming_connection(sockfd);
+        cerr << "Unknown socket type" << endl;
+        exit(6);
     }
 
-    return true;  // TODO: read up: is it okay to return false?
+    if (fd != -1)
+        ss->incoming_connection(fd);
+
+    return true;
 }
 
-void TCPSocketListener::incoming_connection(int sockfd)
-{    
-    if (sockfd != -1)
-        new TCPSocketConnection(sockfd);   
-}

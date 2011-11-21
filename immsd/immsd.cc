@@ -44,7 +44,7 @@ const string AppName = IMMSD_APP;
 
 // set immsd defaults. we could also store these in an immsd class
 SocketType conntype = UNIX_SOCKET;
-int portno = TCPSocketListener::default_port;
+int portno = SocketListenerBase::default_tcp_port;
 
 static Imms *imms;
 static list<RemoteProcessor*> remotes;
@@ -56,7 +56,7 @@ gboolean do_events(void *unused)
     return TRUE;
 }
 
-void FileSocketConnection::process_line(const string &line)
+void SocketConnection::process_line(const string &line)
 {
     if (processor)
         return processor->process_line(line);
@@ -86,41 +86,8 @@ void FileSocketConnection::process_line(const string &line)
 
 };
 
-// TODO: bad to have duplicate code
-void TCPSocketConnection::process_line(const string &line)
-{
-    if (processor)
-        return processor->process_line(line);
 
-    stringstream sstr;
-    sstr << line;
-
-    string command;
-    sstr >> command;
-
-    if (command == "Version")
-    {
-        //write("Version " INTERFACE_VERSION "\n");
-        return;
-    }
-    if (command == "IMMS")
-    {
-        processor = new ImmsProcessor(this);
-        return;
-    }
-    /* todo: decide if we want this
-    if (command == "Remote")
-    {
-        processor = new RemoteProcessor(this);
-        return;
-    }
-    */
-    LOG(ERROR) << "Unknown command: " << command << endl;
-
-};
-
-
-RemoteProcessor::RemoteProcessor(FileSocketConnection *connection)
+RemoteProcessor::RemoteProcessor(SocketConnection *connection)
     : connection(connection)
 {
     remotes.push_back(this);
@@ -155,7 +122,7 @@ void RemoteProcessor::process_line(const string &line)
     LOG(ERROR) << "Unknown command: " << command << endl;
 }
 
-ImmsProcessor::ImmsProcessor(FileSocketConnection *connection)
+ImmsProcessor::ImmsProcessor(SocketConnection *connection)
     : connection(connection)
 {
     if (!imms)
@@ -167,19 +134,6 @@ ImmsProcessor::ImmsProcessor(FileSocketConnection *connection)
         LOG(INFO) << "warning: IMMSProcessor already exists." << endl;
     }
 
-}
-
-ImmsProcessor::ImmsProcessor(TCPSocketConnection *tcpconnection)
-    : tcpconnection(tcpconnection)
-{
-    if (!imms)
-    {
-        imms = new Imms(this);
-    }
-    else
-    {
-        LOG(INFO) << "warning: IMMSProcessor already exists." << endl;
-    }
 }
 
 ImmsProcessor::~ImmsProcessor()
@@ -357,7 +311,7 @@ bool parse_cmd_line_args(int argc, char **argv)
                     {
                         printf("Bad port number '%s'. Please use a number.\n"
                             "Using default port %d instead.\n",
-                            optarg, TCPSocketListener::default_port);
+                            optarg, SocketListenerBase::default_tcp_port);
                     }
                 }
                 break;
@@ -422,12 +376,12 @@ int main(int argc, char **argv)
     // create a new GIOsocket event listener by calling the 
     // appropriate constructor
     if (conntype == TCP_SOCKET)
-    {        
-        new TCPSocketListener(portno);
+    {
+        new SocketListener<SocketConnection>(portno);
     }
     else if (conntype == UNIX_SOCKET)
     {
-        new FileSocketListener<FileSocketConnection>(get_imms_root("socket"));
+        new SocketListener<SocketConnection>(get_imms_root("socket"));
     }
 
     loop = g_main_loop_new(NULL, FALSE);
